@@ -1,16 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
-/**
- *
- * @author Stiven
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class Habitacion {
-    
-    // Atributos
     private int id;
     private String tipo;
     private double precioNoche;
@@ -18,8 +11,25 @@ public class Habitacion {
     private boolean disponibilidad;
     private String descripcion;
     
-    //getters y setter
+    // Relación de asociación con Administrador
+    private List<Administrador> administradores;
+    
+    // Relación de asociación con Reserva
+    private List<Reserva> reservas;
 
+    // Constructor
+    public Habitacion(int id, String tipo, double precioNoche, int capacidadMaxima, String descripcion) {
+        this.id = id;
+        this.tipo = tipo;
+        this.precioNoche = precioNoche;
+        this.capacidadMaxima = capacidadMaxima;
+        this.descripcion = descripcion;
+        this.disponibilidad = true; // Por defecto, la habitación está disponible
+        this.administradores = new ArrayList<>();
+        this.reservas = new ArrayList<>();
+    }
+
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -52,6 +62,14 @@ public class Habitacion {
         this.capacidadMaxima = capacidadMaxima;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     public boolean isDisponibilidad() {
         return disponibilidad;
     }
@@ -60,31 +78,35 @@ public class Habitacion {
         this.disponibilidad = disponibilidad;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    // Método para definir la disponibilidad de la habitación
+    public boolean definirDisponibilidad() {
+        return this.disponibilidad;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    // Método para actualizar el precio de la habitación
+    public void actualizarPrecio(double precio) {
+        this.precioNoche = precio;
     }
-    
-    //constructos parametrizado
-    public Habitacion(int id, String tipo, double precioNoche, int capacidadMaxima, boolean disponibilidad, String descripcion) {
-        this.id = id;
-        this.tipo = tipo;
-        this.precioNoche = precioNoche;
-        this.capacidadMaxima = capacidadMaxima;
-        this.disponibilidad = disponibilidad;
-        this.descripcion = descripcion;
+
+    // Métodos para gestionar administradores
+    public void agregarAdministrador(Administrador administrador) {
+        administradores.add(administrador);
     }
-    
-    //constructor sin parametros
-    public Habitacion() {
+
+    public void eliminarAdministrador(Administrador administrador) {
+        administradores.remove(administrador);
     }
-    
-    
-    
-   
-    
-    
+
+    // Métodos para gestionar reservas
+    public void agregarReserva(Reserva reserva) {
+        reservas.add(reserva);
+    }
+
+    public void eliminarReserva(Reserva reserva) {
+        reservas.remove(reserva);
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
 }
