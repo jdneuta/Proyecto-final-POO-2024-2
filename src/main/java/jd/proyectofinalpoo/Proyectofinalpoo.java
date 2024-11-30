@@ -34,5 +34,6 @@ public class Proyectofinalpoo {
         //Creacion de la vista 
         Vista_Habitacion Vhabit1 = new Vista_Habitacion();
         Vhabit1.vista_habitacion(habit1);
+        //pUERBA 6
     }
 }
