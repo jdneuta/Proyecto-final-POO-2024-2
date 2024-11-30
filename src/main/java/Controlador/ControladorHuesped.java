@@ -11,7 +11,7 @@ public class ControladorHuesped {
     }
 
     // Método privado que devuelve una instancia de VistaHuesped
-    private VistaHuesped vistaHuesped() {
+    public VistaHuesped vistaHuesped() {
         return vista;
     }
 

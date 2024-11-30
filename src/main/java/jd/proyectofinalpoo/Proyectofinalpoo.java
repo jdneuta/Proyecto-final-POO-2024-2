@@ -3,51 +3,195 @@ package jd.proyectofinalpoo;
 import Modelo.*;
 import Vista.*;
 import Controlador.*;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Proyectofinalpoo {
+    // Listas para almacenar usuarios
+    private static ArrayList<Huesped> huespedes = new ArrayList<>();
+    private static ArrayList<Administrador> administradores = new ArrayList<>();
+
     public static void main(String[] args) {
-        // 1. Crear vistas
+        Scanner scanner = new Scanner(System.in);
+
+        // Crear vistas y controladores
         VistaHuesped vistaHuesped = new VistaHuesped();
         VistaAdministrador vistaAdministrador = new VistaAdministrador();
-
-        // 2. Crear controladores
         ControladorHuesped controladorHuesped = new ControladorHuesped(vistaHuesped);
         ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador);
 
-        // 3. Crear datos iniciales (habitaciones, servicios, huéspedes)
-        Habitacion habitacion1 = new Habitacion(1, "Individual", 50.0, 1, "Habitación sencilla con TV y WiFi.");
-        Habitacion habitacion2 = new Habitacion(2, "Doble", 100.0, 2, "Habitación doble con vista al mar.");
-        Servicio servicioSpa = new Servicio("Spa", "Acceso al spa por 1 día", 30.0, 10);
-        Servicio desayuno = new Servicio("Desayuno", "Desayuno continental incluido", 10.0, 20);
+        // Datos iniciales
+        administradores.add(new Administrador("Admin Hotel", "admin@hotel.com", "0987654321", "admin", "admin123"));
+        huespedes.add(new Huesped("Juan Pérez", "juan.perez@example.com", "1234567890", "juanp", "1234"));
 
-        // Crear un huésped
-        Huesped huesped1 = new Huesped("Juan Pérez", "juan.perez@example.com", "1234567890", "juanp", "1234");
-        
-        // Crear un administrador
-        Administrador admin1 = new Administrador("Admin Hotel", "admin@hotel.com", "0987654321", "admin", "admin123");
+        boolean continuar = true;
 
-        // 4. Probar funcionalidades principales
-        System.out.println("----- Bienvenido al Sistema de Gestión de Reservas -----");
+        while (continuar) {
+            System.out.println("\n----- Menú Principal -----");
+            System.out.println("1. Ingresar como huésped");
+            System.out.println("2. Ingresar como administrador");
+            System.out.println("3. Crear un nuevo usuario");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
 
-        // Registrar un huésped
-        controladorHuesped.registrarHuesped();
+            switch (opcion) {
+                case 1: // Ingresar como huésped
+                    System.out.print("Ingrese su usuario: ");
+                    String usuarioH = scanner.nextLine();
+                    System.out.print("Ingrese su contraseña: ");
+                    String contrasenaH = scanner.nextLine();
+                    Huesped huesped = validarHuesped(usuarioH, contrasenaH);
 
-        // Mostrar historial del huésped (vacío inicialmente)
-        vistaHuesped.mostrarHistorialReservas();
+                    if (huesped != null) {
+                        menuHuesped(huesped, controladorHuesped, scanner);
+                    } else {
+                        System.out.println("Usuario o contraseña incorrectos.");
+                    }
+                    break;
 
-        // Crear una reserva
-        Reserva reserva1 = new Reserva(101, huesped1, habitacion1, LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 5));
-        huesped1.agregarReserva(reserva1);
+                case 2: // Ingresar como administrador
+                    System.out.print("Ingrese su usuario: ");
+                    String usuarioA = scanner.nextLine();
+                    System.out.print("Ingrese su contraseña: ");
+                    String contrasenaA = scanner.nextLine();
+                    Administrador admin = validarAdministrador(usuarioA, contrasenaA);
 
-        // Mostrar información de la reserva
-        reserva1.mostrarInformacionReserva();
+                    if (admin != null) {
+                        menuAdministrador(admin, controladorAdministrador, scanner);
+                    } else {
+                        System.out.println("Usuario o contraseña incorrectos.");
+                    }
+                    break;
 
-        // Probar la interacción del administrador
-        controladorAdministrador.registrarAdministrador();
-        admin1.gestionarHabitaciones();
-        admin1.gestionarServicios();
+                case 3: // Crear un nuevo usuario
+                    System.out.println("Seleccione el tipo de usuario:");
+                    System.out.println("1. Huesped");
+                    System.out.println("2. Administrador");
+                    int tipoUsuario = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar buffer
+                    crearUsuario(tipoUsuario, scanner);
+                    break;
 
-        System.out.println("----- Fin de la prueba del sistema -----");
+                case 4: // Salir
+                    continuar = false;
+                    System.out.println("Saliendo del sistema. ¡Hasta pronto!");
+                    break;
+
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        }
+
+        scanner.close();
+    }
+
+    // Validar huésped
+    private static Huesped validarHuesped(String usuario, String contrasena) {
+        for (Huesped h : huespedes) {
+            if (h.getUsuario().equals(usuario) && h.getContrasena().equals(contrasena)) {
+                return h;
+            }
+        }
+        return null;
+    }
+
+    // Validar administrador
+    private static Administrador validarAdministrador(String usuario, String contrasena) {
+        for (Administrador a : administradores) {
+            if (a.getUsuario().equals(usuario) && a.getContrasena().equals(contrasena)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    // Crear un nuevo usuario
+    private static void crearUsuario(int tipoUsuario, Scanner scanner) {
+        System.out.print("Ingrese su nombre: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Ingrese su correo: ");
+        String correo = scanner.nextLine();
+        System.out.print("Ingrese su teléfono: ");
+        String telefono = scanner.nextLine();
+        System.out.print("Ingrese su usuario: ");
+        String usuario = scanner.nextLine();
+        System.out.print("Ingrese su contraseña: ");
+        String contrasena = scanner.nextLine();
+
+        if (tipoUsuario == 1) { // Crear huésped
+            Huesped nuevoHuesped = new Huesped(nombre, correo, telefono, usuario, contrasena);
+            huespedes.add(nuevoHuesped);
+            System.out.println("Huésped creado con éxito.");
+        } else if (tipoUsuario == 2) { // Crear administrador
+            Administrador nuevoAdmin = new Administrador(nombre, correo, telefono, usuario, contrasena);
+            administradores.add(nuevoAdmin);
+            System.out.println("Administrador creado con éxito.");
+        } else {
+            System.out.println("Tipo de usuario no válido.");
+        }
+    }
+
+    // Menú del huésped
+    private static void menuHuesped(Huesped huesped, ControladorHuesped controlador, Scanner scanner) {
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\n--- Menú de Huésped ---");
+            System.out.println("1. Ver historial de reservas");
+            System.out.println("2. Modificar perfil");
+            System.out.println("3. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+
+            switch (opcion) {
+                case 1:
+                    controlador.vistaHuesped().mostrarHistorialReservas();
+                    break;
+                case 2:
+                    controlador.vistaHuesped().modificar();
+                    break;
+                case 3:
+                    continuar = false;
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        }
+    }
+
+    // Menú del administrador
+    private static void menuAdministrador(Administrador admin, ControladorAdministrador controlador, Scanner scanner) {
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\n--- Menú de Administrador ---");
+            System.out.println("1. Gestionar habitaciones");
+            System.out.println("2. Gestionar servicios");
+            System.out.println("3. Generar reporte");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+
+            switch (opcion) {
+                case 1:
+                    admin.gestionarHabitaciones();
+                    break;
+                case 2:
+                    admin.gestionarServicios();
+                    break;
+                case 3:
+                    admin.generarReporte();
+                    break;
+                case 4:
+                    continuar = false;
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        }
     }
 }
