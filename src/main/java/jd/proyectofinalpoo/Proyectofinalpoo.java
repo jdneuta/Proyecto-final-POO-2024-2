@@ -13,18 +13,25 @@ public class Proyectofinalpoo {
         ArrayList<Habitacion> habitaciones = new ArrayList<>();
         ArrayList<Servicio> servicios = new ArrayList<>();
 
-        // Datos iniciales
+        // Datos iniciales de huéspedes y administradores
         huespedes.add(new Huesped("Juan Pérez", "juan.perez@example.com", "1234567890", "juanp", "1234"));
         administradores.add(new Administrador("Admin Hotel", "admin@hotel.com", "0987654321", "admin", "admin123"));
+
+        // Datos iniciales de habitaciones usando subclases
+        habitaciones.add(new HabitacionIndividual(1, "Habitación individual con vista al jardín."));
+        habitaciones.add(new HabitacionDoble(2, "Habitación doble con balcón."));
+        habitaciones.add(new Suite(3, "Suite de lujo con jacuzzi y vista panorámica."));
+
+        // Datos iniciales de servicios
         servicios.add(new Servicio("Spa", "Acceso al spa por 1 día", 30.0, 10));
         servicios.add(new Servicio("Desayuno", "Desayuno continental incluido", 10.0, 20));
-        habitaciones.add(new Habitacion(1, "Doble", 100.0, 2, "Habitación doble con vista al mar."));
-        habitaciones.add(new Habitacion(2, "Suite", 200.0, 4, "Suite de lujo con vista panorámica y jacuzzi."));
 
-        // Crear vistas y controladores
+        // Crear vistas
         VistaPrincipal vistaPrincipal = new VistaPrincipal();
         VistaHuesped vistaHuesped = new VistaHuesped();
         VistaAdministrador vistaAdministrador = new VistaAdministrador();
+
+        // Crear controladores
         ControladorHuesped controladorHuesped = new ControladorHuesped(vistaHuesped);
         ControladorAdministrador controladorAdministrador = new ControladorAdministrador(vistaAdministrador);
 

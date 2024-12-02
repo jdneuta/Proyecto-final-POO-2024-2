@@ -51,10 +51,7 @@ public class ControladorAdministrador {
     private void gestionarHabitaciones(List<Habitacion> habitaciones) {
         vista.mostrarMensaje("Gestión de habitaciones:");
         for (Habitacion habitacion : habitaciones) {
-            vista.mostrarMensaje("ID: " + habitacion.getId() + ", Tipo: " + habitacion.getTipo() +
-                    ", Precio por noche: $" + habitacion.getPrecioNoche() +
-                    ", Capacidad: " + habitacion.getCapacidadMaxima() +
-                    ", Descripción: " + habitacion.getDescripcion());
+            vista.mostrarMensaje(habitacion.mostrarInformacion()); // Mostrar info específica de la subclase
         }
 
         vista.mostrarMensaje("Esta funcionalidad puede ampliarse para agregar, modificar o eliminar habitaciones.");
@@ -77,9 +74,7 @@ public class ControladorAdministrador {
     private void generarReportes(List<Habitacion> habitaciones, List<Servicio> servicios) {
         vista.mostrarMensaje("--- Reporte de Habitaciones ---");
         for (Habitacion habitacion : habitaciones) {
-            vista.mostrarMensaje("ID: " + habitacion.getId() +
-                    ", Tipo: " + habitacion.getTipo() +
-                    ", Estado: " + (habitacion.isDisponibilidad() ? "Disponible" : "Ocupada"));
+            vista.mostrarMensaje(habitacion.mostrarInformacion()); // Usar método polimórfico
         }
 
         vista.mostrarMensaje("--- Reporte de Servicios ---");
