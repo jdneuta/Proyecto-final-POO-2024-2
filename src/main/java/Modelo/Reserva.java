@@ -1,6 +1,8 @@
 package Modelo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reserva {
     private int idReserva;
@@ -8,6 +10,7 @@ public class Reserva {
     private Habitacion habitacion;
     private LocalDate fechaEntrada;
     private LocalDate fechaSalida;
+    private List<Servicio> servicios; // Lista de servicios adicionales
 
     // Constructor
     public Reserva(int idReserva, Huesped huesped, Habitacion habitacion, LocalDate fechaEntrada, LocalDate fechaSalida) {
@@ -16,6 +19,7 @@ public class Reserva {
         this.habitacion = habitacion;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
+        this.servicios = new ArrayList<>();
     }
 
     // Getters
@@ -39,43 +43,49 @@ public class Reserva {
         return fechaSalida;
     }
 
-    // Método para realizar la reserva
-    public void realizarReserva() {
-        try {
-            // Validación de capacidad
-            if (habitacion.getCapacidadMaxima() <= 0) {
-                throw new ExcepcionCapacidad("La habitación no tiene capacidad disponible.");
-            }
+    public List<Servicio> getServicios() {
+        return servicios;
+    }
 
-            // Validación de fechas
-            if (fechaEntrada.isAfter(fechaSalida)) {
-                throw new ExcepcionFecha("La fecha de entrada no puede ser después de la fecha de salida.");
-            }
-
-            // Simulación de un proceso de pago
-            boolean pagoRealizado = false; // Cambia esto según la lógica de tu aplicación
-            if (!pagoRealizado) {
-                throw new ExcepcionPago("El pago no se ha realizado correctamente.");
-            }
-
-            // Lógica para realizar la reserva (por ejemplo, guardar en base de datos)
-            System.out.println("Reserva realizada con éxito: " + idReserva);
-
-        } catch (ExcepcionCapacidad e) {
-            System.out.println("Error de capacidad: " + e.getMensaje());
-        } catch (ExcepcionFecha e) {
-            System.out.println("Error de fecha: " + e.getMensaje());
-        } catch (ExcepcionPago e) {
-            System.out.println("Error de pago: " + e.getMensaje());
+    // Métodos para manejar servicios
+    public void agregarServicio(Servicio servicio) {
+        if (servicio.isDisponibilidad() && servicio.getCantidadDisponible() > 0) {
+            servicios.add(servicio);
+            servicio.setCantidadDisponible(servicio.getCantidadDisponible() - 1);
+            System.out.println("Servicio añadido: " + servicio.getNombreServicio());
+        } else {
+            System.out.println("El servicio no está disponible: " + servicio.getNombreServicio());
         }
     }
 
-    // Método para mostrar información de la reserva (opcional)
+    // Método para calcular el costo total
+    public double calcularCostoTotal() {
+        // Calcular el número de noches
+        long noches = java.time.temporal.ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
+
+        // Calcular costo base
+        double costoBase = noches * habitacion.getPrecioNoche();
+
+        // Sumar costos de servicios
+        double costoServicios = servicios.stream().mapToDouble(Servicio::getCostoAdicional).sum();
+
+        // Descuentos (ejemplo: 10% para estancias de más de 5 noches)
+        double descuento = (noches > 5) ? costoBase * 0.1 : 0;
+
+        // Costo total
+        return costoBase + costoServicios - descuento;
+    }
+
+    // Método para mostrar información de la reserva
     public void mostrarInformacionReserva() {
         System.out.println("ID Reserva: " + idReserva);
-        System.out.println("Huésped: " + (huesped != null ? huesped.getNombre() : "No asignado"));
-        System.out.println("Habitación ID: " + (habitacion != null ? habitacion.getId() : "No asignada"));
-        System.out.println("Fecha de Entrada: " + fechaEntrada);
-        System.out.println("Fecha de Salida: " + fechaSalida);
+        System.out.println("Huésped: " + huesped.getNombre());
+        System.out.println("Habitación: " + habitacion.getTipo());
+        System.out.println("Fechas: " + fechaEntrada + " a " + fechaSalida);
+        System.out.println("Servicios adicionales:");
+        for (Servicio servicio : servicios) {
+            System.out.println("- " + servicio.getNombreServicio() + " ($" + servicio.getCostoAdicional() + ")");
+        }
+        System.out.println("Costo total: $" + calcularCostoTotal());
     }
 }

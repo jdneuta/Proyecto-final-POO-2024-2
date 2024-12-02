@@ -1,28 +1,39 @@
 package Vista;
 
+import java.util.Scanner;
+
 public class VistaAdministrador {
+    private Scanner scanner;
 
-    // Método para mostrar el historial de reservas del administrador
-    public void mostrarHistorialReservas() {
-        System.out.println("Mostrando historial de reservas del administrador...");
-        // Aquí iría la lógica para mostrar el historial
+    public VistaAdministrador() {
+        this.scanner = new Scanner(System.in);
     }
 
-    // Método para registrar un nuevo administrador
-    public void registrar() {
-        System.out.println("Registrando nuevo administrador...");
-        // Aquí iría la lógica para registrar un administrador
+    // Mostrar el menú del administrador
+    public int mostrarMenu() {
+        System.out.println("\n--- Menú de Administrador ---");
+        System.out.println("1. Gestionar habitaciones");
+        System.out.println("2. Gestionar servicios");
+        System.out.println("3. Generar reportes");
+        System.out.println("4. Salir");
+        System.out.print("Seleccione una opción: ");
+        return scanner.nextInt();
     }
 
-    // Método para modificar los datos de un administrador
-    public void modificar() {
-        System.out.println("Modificando datos del administrador...");
-        // Aquí iría la lógica para modificar un administrador
+    // Mostrar mensaje para el administrador
+    public void mostrarMensaje(String mensaje) {
+        System.out.println(mensaje);
     }
 
-    // Método para eliminar un administrador
-    public void eliminar() {
-        System.out.println("Eliminando administrador...");
-        // Aquí iría la lógica para eliminar un administrador
+    // Leer texto para operaciones administrativas
+    public String leerTexto(String mensaje) {
+        System.out.print(mensaje + ": ");
+        return scanner.next();
+    }
+
+    // Leer número para operaciones administrativas
+    public int leerNumero(String mensaje) {
+        System.out.print(mensaje + ": ");
+        return scanner.nextInt();
     }
 }
