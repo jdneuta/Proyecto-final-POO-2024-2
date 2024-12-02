@@ -1,22 +1,27 @@
 package Controlador;
 
-import Modelo.*;
+import Modelo.Habitacion;
+import Modelo.Servicio;
 import Vista.VistaAdministrador;
 import java.util.List;
 
 public class ControladorAdministrador {
     private VistaAdministrador vista;
+    private ControladorHabitaciones controladorHabitaciones;
+    private ControladorServicios controladorServicios;
+    private ControladorReportes controladorReportes;
 
     public ControladorAdministrador(VistaAdministrador vista) {
         this.vista = vista;
+        this.controladorHabitaciones = new ControladorHabitaciones(vista);
+        this.controladorServicios = new ControladorServicios(vista);
+        this.controladorReportes = new ControladorReportes(vista);
     }
 
-    // Método para acceder a la vista
     public VistaAdministrador getVista() {
         return this.vista;
     }
 
-    // Método para gestionar el menú del administrador
     public void gestionarMenu(List<Habitacion> habitaciones, List<Servicio> servicios) {
         boolean continuar = true;
 
@@ -25,15 +30,15 @@ public class ControladorAdministrador {
 
             switch (opcion) {
                 case 1: // Gestionar habitaciones
-                    gestionarHabitaciones(habitaciones);
+                    controladorHabitaciones.gestionarHabitaciones(habitaciones);
                     break;
 
                 case 2: // Gestionar servicios
-                    gestionarServicios(servicios);
+                    controladorServicios.gestionarServicios(servicios);
                     break;
 
                 case 3: // Generar reportes
-                    generarReportes(habitaciones, servicios);
+                    controladorReportes.generarReportes(habitaciones, servicios);
                     break;
 
                 case 4: // Salir
@@ -42,47 +47,8 @@ public class ControladorAdministrador {
                     break;
 
                 default:
-                    vista.mostrarMensaje("Opción no válida.");
+                    vista.mostrarMensaje("Opción no válida. Intente de nuevo.");
             }
         }
-    }
-
-    // Método para gestionar habitaciones
-    private void gestionarHabitaciones(List<Habitacion> habitaciones) {
-        vista.mostrarMensaje("Gestión de habitaciones:");
-        for (Habitacion habitacion : habitaciones) {
-            vista.mostrarMensaje(habitacion.mostrarInformacion()); // Mostrar info específica de la subclase
-        }
-
-        vista.mostrarMensaje("Esta funcionalidad puede ampliarse para agregar, modificar o eliminar habitaciones.");
-    }
-
-    // Método para gestionar servicios
-    private void gestionarServicios(List<Servicio> servicios) {
-        vista.mostrarMensaje("Gestión de servicios:");
-        for (Servicio servicio : servicios) {
-            vista.mostrarMensaje("Servicio: " + servicio.getNombreServicio() +
-                    ", Descripción: " + servicio.getDescripcion() +
-                    ", Precio adicional: $" + servicio.getCostoAdicional() +
-                    ", Disponibles: " + servicio.getCantidadDisponible());
-        }
-
-        vista.mostrarMensaje("Esta funcionalidad puede ampliarse para agregar, modificar o eliminar servicios.");
-    }
-
-    // Método para generar reportes
-    private void generarReportes(List<Habitacion> habitaciones, List<Servicio> servicios) {
-        vista.mostrarMensaje("--- Reporte de Habitaciones ---");
-        for (Habitacion habitacion : habitaciones) {
-            vista.mostrarMensaje(habitacion.mostrarInformacion()); // Usar método polimórfico
-        }
-
-        vista.mostrarMensaje("--- Reporte de Servicios ---");
-        for (Servicio servicio : servicios) {
-            vista.mostrarMensaje("Servicio: " + servicio.getNombreServicio() +
-                    ", Disponibles: " + servicio.getCantidadDisponible());
-        }
-
-        vista.mostrarMensaje("Esta funcionalidad puede ampliarse con estadísticas avanzadas.");
     }
 }

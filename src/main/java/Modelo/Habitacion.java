@@ -10,9 +10,10 @@ public abstract class Habitacion {
         this.id = id;
         this.capacidadMaxima = capacidadMaxima;
         this.descripcion = descripcion;
-        this.disponibilidad = true;
+        this.disponibilidad = true; // Por defecto, la habitación está disponible
     }
 
+    // Getters
     public int getId() {
         return id;
     }
@@ -37,8 +38,11 @@ public abstract class Habitacion {
         this.descripcion = descripcion;
     }
 
-    public abstract double calcularPrecio(int noches);
+    // Métodos abstractos que serán implementados por las subclases
+    public abstract double getPrecioNoche();
+    public abstract String getTipo();
 
+    // Método para mostrar información de la habitación (puede ser sobreescrito por subclases)
     public String mostrarInformacion() {
         return "ID: " + id + ", Capacidad: " + capacidadMaxima +
                 ", Descripción: " + descripcion +

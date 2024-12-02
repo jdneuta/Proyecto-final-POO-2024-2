@@ -16,24 +16,29 @@ public class VistaAdministrador {
         System.out.println("2. Gestionar servicios");
         System.out.println("3. Generar reportes");
         System.out.println("4. Salir");
-        System.out.print("Seleccione una opción: ");
-        return scanner.nextInt();
+        return leerNumero("Seleccione una opción");
     }
 
-    // Mostrar mensaje para el administrador
+    // Mostrar un mensaje
     public void mostrarMensaje(String mensaje) {
         System.out.println(mensaje);
     }
 
-    // Leer texto para operaciones administrativas
+    // Leer texto completo
     public String leerTexto(String mensaje) {
         System.out.print(mensaje + ": ");
-        return scanner.next();
+        return scanner.nextLine().trim();
     }
 
-    // Leer número para operaciones administrativas
+    // Leer un número entero
     public int leerNumero(String mensaje) {
-        System.out.print(mensaje + ": ");
-        return scanner.nextInt();
+        while (true) {
+            try {
+                System.out.print(mensaje + ": ");
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número.");
+            }
+        }
     }
 }

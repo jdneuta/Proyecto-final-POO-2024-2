@@ -22,7 +22,18 @@ public class Reserva {
         this.servicios = new ArrayList<>();
     }
 
-    // Métodos para manejar servicios
+    // Getters para las fechas de entrada y salida
+    public LocalDate getFechaEntrada() {
+        return fechaEntrada;
+    }
+
+    public LocalDate getFechaSalida() {
+        return fechaSalida;
+    }
+
+    // Otros getters y métodos que ya tienes implementados
+
+    // Método para manejar servicios
     public void agregarServicio(Servicio servicio) {
         if (servicio.isDisponibilidad() && servicio.getCantidadDisponible() > 0) {
             servicios.add(servicio);
@@ -38,8 +49,8 @@ public class Reserva {
         // Calcular el número de noches
         long noches = java.time.temporal.ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
 
-        // Calcular costo base usando polimorfismo
-        double costoBase = habitacion.calcularPrecio((int) noches);
+        // Calcular costo base
+        double costoBase = noches * habitacion.getPrecioNoche();
 
         // Sumar costos de servicios
         double costoServicios = servicios.stream().mapToDouble(Servicio::getCostoAdicional).sum();
@@ -55,7 +66,7 @@ public class Reserva {
     public void mostrarInformacionReserva() {
         System.out.println("ID Reserva: " + idReserva);
         System.out.println("Huésped: " + huesped.getNombre());
-        System.out.println("Habitación: " + habitacion.mostrarInformacion()); // Mostrar información polimórfica
+        System.out.println("Habitación: " + habitacion.getTipo());
         System.out.println("Fechas: " + fechaEntrada + " a " + fechaSalida);
         System.out.println("Servicios adicionales:");
         for (Servicio servicio : servicios) {

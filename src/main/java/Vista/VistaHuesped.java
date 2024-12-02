@@ -1,11 +1,14 @@
 package Vista;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class VistaHuesped {
     private Scanner scanner;
 
+    // Constructor
     public VistaHuesped() {
         this.scanner = new Scanner(System.in);
     }
@@ -17,55 +20,59 @@ public class VistaHuesped {
         System.out.println("2. Crear nueva reserva");
         System.out.println("3. Modificar perfil");
         System.out.println("4. Salir");
-        System.out.print("Seleccione una opción: ");
-        return leerNumero("Ingrese una opción válida");
+        return leerNumero("Seleccione una opción");
     }
 
-    // Pedir fecha al usuario
-    public LocalDate pedirFecha(String mensaje) {
-        LocalDate fecha = null;
-        boolean fechaValida = false;
-
-        while (!fechaValida) {
-            try {
-                System.out.print(mensaje + " (YYYY-MM-DD): ");
-                String inputFecha = scanner.next();
-                fecha = LocalDate.parse(inputFecha);
-                fechaValida = true;
-            } catch (Exception e) {
-                System.out.println("Formato de fecha inválido. Intente nuevamente.");
-            }
-        }
-        return fecha;
+    // Mostrar un mensaje en pantalla
+    public void mostrarMensaje(String mensaje) {
+        System.out.println(mensaje);
     }
 
-    // Confirmar selección de un servicio
-    public boolean confirmarServicio(String nombreServicio) {
-        System.out.print("¿Desea agregar el servicio " + nombreServicio + "? (S/N): ");
-        String respuesta = scanner.next();
-        return respuesta.equalsIgnoreCase("S");
+    // Leer texto completo del usuario
+    public String leerTexto(String mensaje) {
+        System.out.print(mensaje + ": ");
+        String input = scanner.nextLine();
+        return input.trim(); // Elimina espacios en blanco al inicio y al final
     }
 
-    // Leer un número entero con validación
+    // Leer un número entero del usuario con validación
     public int leerNumero(String mensaje) {
-        int numero = -1;
-        boolean numeroValido = false;
-
-        while (!numeroValido) {
+        while (true) {
             try {
                 System.out.print(mensaje + ": ");
-                numero = Integer.parseInt(scanner.next());
-                numeroValido = true;
+                return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Entrada no válida. Por favor, ingrese un número.");
             }
         }
-
-        return numero;
     }
 
-    // Mostrar mensaje
-    public void mostrarMensaje(String mensaje) {
-        System.out.println(mensaje);
+    // Pedir una fecha al usuario y validarla
+    public LocalDate pedirFecha(String mensaje) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        while (true) {
+            try {
+                System.out.print(mensaje + " (formato: yyyy-MM-dd): ");
+                String input = scanner.nextLine().trim();
+                return LocalDate.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Fecha no válida. Por favor, ingrese una fecha en el formato correcto (yyyy-MM-dd).");
+            }
+        }
+    }
+
+    // Confirmar si el usuario desea agregar un servicio
+    public boolean confirmarServicio(String nombreServicio) {
+        while (true) {
+            System.out.print("¿Desea agregar el servicio " + nombreServicio + "? (S/N): ");
+            String respuesta = scanner.nextLine().trim();
+            if (respuesta.equalsIgnoreCase("S")) {
+                return true;
+            } else if (respuesta.equalsIgnoreCase("N")) {
+                return false;
+            } else {
+                System.out.println("Entrada no válida. Por favor, responda con 'S' o 'N'.");
+            }
+        }
     }
 }

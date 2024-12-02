@@ -3,23 +3,24 @@ package Controlador;
 import Modelo.*;
 import Vista.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControladorPrincipal {
     private VistaPrincipal vistaPrincipal;
     private ControladorHuesped controladorHuesped;
     private ControladorAdministrador controladorAdministrador;
-    private ArrayList<Huesped> huespedes;
-    private ArrayList<Administrador> administradores;
-    private ArrayList<Habitacion> habitaciones;
-    private ArrayList<Servicio> servicios;
+    private List<Huesped> huespedes;
+    private List<Administrador> administradores;
+    private List<Habitacion> habitaciones;
+    private List<Servicio> servicios;
 
     public ControladorPrincipal(VistaPrincipal vistaPrincipal,
                                 ControladorHuesped controladorHuesped,
                                 ControladorAdministrador controladorAdministrador,
-                                ArrayList<Huesped> huespedes,
-                                ArrayList<Administrador> administradores,
-                                ArrayList<Habitacion> habitaciones,
-                                ArrayList<Servicio> servicios) {
+                                List<Huesped> huespedes,
+                                List<Administrador> administradores,
+                                List<Habitacion> habitaciones,
+                                List<Servicio> servicios) {
         this.vistaPrincipal = vistaPrincipal;
         this.controladorHuesped = controladorHuesped;
         this.controladorAdministrador = controladorAdministrador;
@@ -66,7 +67,8 @@ public class ControladorPrincipal {
 
         if (huesped != null) {
             controladorHuesped.getVista().mostrarMensaje("Bienvenido, " + huesped.getNombre());
-            controladorHuesped.crearReserva(huesped, habitaciones, servicios);
+            // Mostrar el menú del huésped
+            controladorHuesped.gestionarMenuHuesped(huesped, habitaciones, servicios);
         } else {
             vistaPrincipal.mostrarMensaje("Usuario o contraseña incorrectos.");
         }
@@ -89,7 +91,7 @@ public class ControladorPrincipal {
         vistaPrincipal.mostrarMensaje("Seleccione el tipo de usuario:");
         vistaPrincipal.mostrarMensaje("1. Huésped");
         vistaPrincipal.mostrarMensaje("2. Administrador");
-        int tipoUsuario = Integer.parseInt(vistaPrincipal.leerTexto("Ingrese su opción"));
+        int tipoUsuario = vistaPrincipal.leerNumero("Ingrese su opción");
 
         String nombre = vistaPrincipal.leerTexto("Ingrese su nombre");
         String correo = vistaPrincipal.leerTexto("Ingrese su correo");

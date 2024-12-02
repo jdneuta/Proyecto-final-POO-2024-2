@@ -2,79 +2,61 @@ package Controlador;
 
 import Modelo.*;
 import Vista.VistaHuesped;
-import java.time.LocalDate;
 import java.util.List;
 
 public class ControladorHuesped {
     private VistaHuesped vista;
+    private ControladorReserva controladorReserva;
+    private ControladorPerfil controladorPerfil;
 
     public ControladorHuesped(VistaHuesped vista) {
         this.vista = vista;
+        this.controladorReserva = new ControladorReserva(vista);
+        this.controladorPerfil = new ControladorPerfil(vista);
     }
 
     public VistaHuesped getVista() {
         return this.vista;
     }
 
-    public void crearReserva(Huesped huesped, List<Habitacion> habitaciones, List<Servicio> servicios) {
-        try {
-            // Pedir fechas al usuario
-            LocalDate fechaEntrada = vista.pedirFecha("Ingrese la fecha de entrada");
-            LocalDate fechaSalida = vista.pedirFecha("Ingrese la fecha de salida");
+    public void gestionarMenuHuesped(Huesped huesped, List<Habitacion> habitaciones, List<Servicio> servicios) {
+        boolean continuar = true;
 
-            if (!fechaEntrada.isBefore(fechaSalida)) {
-                vista.mostrarMensaje("La fecha de salida debe ser posterior a la fecha de entrada.");
-                return;
+        while (continuar) {
+            int opcion = vista.mostrarMenu();
+
+            switch (opcion) {
+                case 1: // Ver historial de reservas
+                    verHistorialReservas(huesped);
+                    break;
+
+                case 2: // Crear nueva reserva
+                    controladorReserva.crearReserva(huesped, habitaciones, servicios);
+                    break;
+
+                case 3: // Modificar perfil
+                    controladorPerfil.modificarPerfil(huesped);
+                    break;
+
+                case 4: // Salir
+                    continuar = false;
+                    vista.mostrarMensaje("Saliendo del menú de huésped.");
+                    break;
+
+                default:
+                    vista.mostrarMensaje("Opción no válida. Intente de nuevo.");
             }
+        }
+    }
 
-            // Mostrar habitaciones disponibles
-            vista.mostrarMensaje("Seleccione una habitación:");
-            for (Habitacion habitacion : habitaciones) {
-                if (habitacion.isDisponibilidad()) {
-                    vista.mostrarMensaje(habitacion.mostrarInformacion());
-                }
+    private void verHistorialReservas(Huesped huesped) {
+        List<Reserva> historial = huesped.verHistorial();
+        if (historial.isEmpty()) {
+            vista.mostrarMensaje("No tiene reservas en el historial.");
+        } else {
+            for (Reserva reserva : historial) {
+                reserva.mostrarInformacionReserva();
             }
-
-            // Seleccionar una habitación
-            int seleccionHabitacion = vista.leerNumero("Ingrese el número de la habitación deseada") - 1;
-            if (seleccionHabitacion < 0 || seleccionHabitacion >= habitaciones.size()) {
-                vista.mostrarMensaje("Selección no válida. Operación cancelada.");
-                return;
-            }
-
-            Habitacion habitacionSeleccionada = habitaciones.get(seleccionHabitacion);
-
-            // Calcular noches
-            int noches = fechaSalida.getDayOfYear() - fechaEntrada.getDayOfYear();
-
-            // Calcular precio
-            double precioTotal = habitacionSeleccionada.calcularPrecio(noches);
-            vista.mostrarMensaje("El costo total para " + noches + " noches es: $" + precioTotal);
-
-            // Crear reserva
-            Reserva nuevaReserva = new Reserva(
-                    huesped.verHistorial().size() + 1,
-                    huesped,
-                    habitacionSeleccionada,
-                    fechaEntrada,
-                    fechaSalida
-            );
-
-            // Agregar servicios adicionales
-            for (Servicio servicio : servicios) {
-                if (vista.confirmarServicio(servicio.getNombreServicio())) {
-                    nuevaReserva.agregarServicio(servicio);
-                }
-            }
-
-            // Agregar reserva al huésped
-            huesped.agregarReserva(nuevaReserva);
-            habitacionSeleccionada.setDisponibilidad(false);
-            vista.mostrarMensaje("Reserva creada con éxito:");
-            nuevaReserva.mostrarInformacionReserva();
-
-        } catch (Exception e) {
-            vista.mostrarMensaje("Error al crear la reserva: " + e.getMessage());
         }
     }
 }

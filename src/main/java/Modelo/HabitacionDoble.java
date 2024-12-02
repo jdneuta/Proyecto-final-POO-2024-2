@@ -1,20 +1,25 @@
 package Modelo;
 
 public class HabitacionDoble extends Habitacion {
-    private static final double PRECIO_BASE = 100.0;
+    private static final double PRECIO_NOCHE = 100.0;
 
     public HabitacionDoble(int id, String descripcion) {
-        super(id, 2, descripcion);
+        super(id, 2, descripcion); // Capacidad máxima: 2 personas
     }
 
     @Override
-    public double calcularPrecio(int noches) {
-        return PRECIO_BASE * noches;
+    public double getPrecioNoche() {
+        return PRECIO_NOCHE;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Doble";
     }
 
     @Override
     public String mostrarInformacion() {
         return "Habitación Doble - " + super.mostrarInformacion() +
-                ", Precio por noche: $" + PRECIO_BASE;
+                ", Precio por noche: $" + PRECIO_NOCHE;
     }
 }
